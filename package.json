@@ -1,0 +1,17 @@
+{
+  "name": "serverless-now",
+  "version": "1.0.0",
+  "description": "Serverless Framework Lambda functions to interact with the UoA ServiceNow.",
+  "main": "handler.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "Lambda",
+    "ServiceNow",
+    "Serverless",
+    "Framework"
+  ],
+  "author": "Sam Kavanagh (tofu.dev)",
+  "license": "ISC"
+}
