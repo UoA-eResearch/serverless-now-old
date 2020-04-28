@@ -45,8 +45,9 @@ functions:
     handler: handler.main
     events:
       - http:
-          path: ticket
+          path: serverless-now
           method: get
+
 plugins:
   - serverless-offline
   - serverless-mocha-plugin

@@ -5,8 +5,11 @@ module.exports.main = async event => {
    // Return secret from parameter store
   const EXAMPLE_SECRET = process.env.EXAMPLE_KEY;
 
-  // If its a POST request and it contains a body
-  if(event.httpMethod === "POST") {
+  /**
+   * Create a ServiceNow ticket
+   * Method: POST
+   */
+  if(event.httpMethod === "POST" && event.body) {
 
     // let json = JSON.parse(event.body);
     let json = event.body;
@@ -15,7 +18,7 @@ module.exports.main = async event => {
       statusCode: 200,
       body: JSON.stringify(
         {
-          message: 'Hi, you sent me POST:',
+          message: 'Creating ticket',
           object: json
         },
         null,
@@ -24,13 +27,15 @@ module.exports.main = async event => {
     };
   }
 
-  // If people have passed a name URL param
-  if(event.queryStringParameters && event.queryStringParameters.name) {
+  /**
+   * Get a ServiceNow ticket by ID.
+   */
+  if(event.queryStringParameters && event.queryStringParameters.ticketId) {
     return {
       statusCode: 200,
       body: JSON.stringify(
         {
-          message: 'Sup ' + event.queryStringParameters.name + ', nice to meet you!',
+          message: 'Returning ServiceNow ticket with ID: ' + escape(event.queryStringParameters.ticketId),
         },
         null,
         2
@@ -39,14 +44,15 @@ module.exports.main = async event => {
   }
 
 
-  // Use this code if you want to use the LAMBDA-PROXY integration
-  // This allows you to control API-Gateway within your Lambda functionk
+  /**
+   * Default message
+   */
   return {
     statusCode: 200,
     body: JSON.stringify(
       {
-        message: 'Sam was here!',
-        example2: EXAMPLE_SECRET
+        message: 'Welcome to serverless-now',
+        aws_message: EXAMPLE_SECRET
       },
       null,
       2
