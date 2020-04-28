@@ -3,7 +3,6 @@
 const mochaPlugin = require('serverless-mocha-plugin');
 const expect = mochaPlugin.chai.expect;
 let wrapped = mochaPlugin.getWrapper('main', '/handler.js', 'main');
-// let wrapped = mochaPlugin.initLiveModule('/handler.js.main');
 
 describe('main', () => {
     before((done) => {
@@ -59,10 +58,12 @@ describe('main', () => {
         const response = await wrapped.run({});
         const body = JSON.parse(response.body);
 
-        expect(body.aws_message).to.equal('Welcome to serverless-now');
+        expect(body.aws_message).to.equal('Welcome to serverless-now from AWS');
     });
 
     xit('returns a ticket by a hardcoded ticket id', () => {});
+    xit('returns the UPI of the requestor');
+    xit('returns an error if an unauthenticated user accesses this function');
 
 
 });

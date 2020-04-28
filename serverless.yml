@@ -47,6 +47,9 @@ functions:
       - http:
           path: serverless-now
           method: get
+      - http:
+          path: serverless-now
+          method: post
 
 plugins:
   - serverless-offline
