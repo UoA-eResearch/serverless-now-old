@@ -24,7 +24,7 @@ describe('main', () => {
 
     it('displays URL query strings back', async () => {
 
-        const ticketId = '1337-TICKET';
+        const ticketId = 'REQ1337';
 
         const response = await wrapped.run({
             queryStringParameters: { ticketId: ticketId }
@@ -32,7 +32,6 @@ describe('main', () => {
 
         const body = JSON.parse(response.body);
         expect(body.message).to.contain(`Returning ServiceNow ticket with ID: ${ticketId}`);
-
     })
 
     it('responds to POST requests', async () => {
@@ -61,7 +60,18 @@ describe('main', () => {
         expect(body.aws_message).to.equal('Welcome to serverless-now from AWS');
     });
 
-    xit('returns a ticket by a hardcoded ticket id', () => {});
+    it('returns a ticket by a hardcoded ticket id',async  () => {
+
+        const ticketId = 'REQ1216647';
+
+        const response = await wrapped.run({
+            queryStringParameters: { ticketId: ticketId }
+        });
+
+        const body = JSON.parse(response.body);
+        expect(body.short_description).to.contain(`Storage request 123`);
+
+    });
     xit('returns the UPI of the requestor');
     xit('returns an error if an unauthenticated user accesses this function');
 
