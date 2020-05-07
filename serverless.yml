@@ -8,30 +8,30 @@ provider:
   endpointType: regional
   role: arn:aws:iam::416527880812:role/lambda_basic_execution_with_read_only_access_to_SSM
   stackTags:
-    CeR-Dashboard-MVP: ${self:service}
+    ResearchHub: ${self:service}
     BusinessService: Faculty of Science
     Department: Centre for eResearch
     ProjectCode: N/A
     WikiLink: N/A
-    Application: serverless-now
+    Application: ${self:service}
     CostCentre: N/A
   environment:
     # Environment variables available to all functions in this service
     ENV: ${self:provider.stage}
     LEVEL: INFO
     EXAMPLE_KEY: ${ssm:/${self:provider.stage}/research-hub/example-key~true}
+    SN_API_KEY_R: ${ssm:/${self:provider.stage}/research-hub/SN_API_KEY_R~true}
   iamRoleStatements:
     - Effect: Allow
       Action:
-        - ssm:GetParameter
         - ssm:GetParameters
       Resource:
-        - "arn:aws:ssm:${self:provider.region}:416527880812:parameter/${self:provider.stage}/research-hub/*"
+        - "arn:aws:ssm:${self:provider.region}:*:parameter/${self:provider.stage}/research-hub/*"
     - Effect: Allow
       Action:
         - kms:Decrypt
       Resource:
-        - "arn:aws:kms:ap-southeast-2:416527880812:key/3cf7aeb4-ad8c-4505-a8e3-7d2a556e188d"
+        - "arn:aws:kms:ap-southeast-2:*:key/3cf7aeb4-ad8c-4505-a8e3-7d2a556e188d"
 
 package:
   exclude:
