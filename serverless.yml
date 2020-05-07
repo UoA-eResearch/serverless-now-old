@@ -24,14 +24,15 @@ provider:
   iamRoleStatements:
     - Effect: Allow
       Action:
+        - ssm:GetParameter
         - ssm:GetParameters
       Resource:
-        - "arn:aws:ssm:${self:provider.region}:*:parameter/${self:provider.stage}/research-hub/*"
+        - "arn:aws:ssm:${self:provider.region}:416527880812:parameter/${self:provider.stage}/research-hub/*"
     - Effect: Allow
       Action:
         - kms:Decrypt
       Resource:
-        - "arn:aws:kms:ap-southeast-2:*:key/3cf7aeb4-ad8c-4505-a8e3-7d2a556e188d"
+        - "arn:aws:kms:ap-southeast-2:416527880812:key/3cf7aeb4-ad8c-4505-a8e3-7d2a556e188d"
 
 package:
   exclude:
