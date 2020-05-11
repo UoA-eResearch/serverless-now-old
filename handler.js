@@ -1,7 +1,6 @@
 'use strict';
 const https = require('https')
 
-
 module.exports.main = async event => {
   const BASE_URL = `api.${process.env.ENV}.auckland.ac.nz`;
 
@@ -57,15 +56,14 @@ module.exports.main = async event => {
     return new Promise((resolve, reject) => {
       let request = https.request(options, res => {
         res.setEncoding('utf8');
-        let body = "";
+        let body = '';
+
         res.on('data', chunk => body += chunk);
         res.on('end', () => resolve(JSON.parse(body)));
         res.on('error', e => reject((e)));
       });
 
-      if (data) // If it is a POST request
-        request.write(JSON.stringify(data));
-      request.end(); // Execute the request
+      data && request.write(JSON.stringify(data)) || request.end(); // Optionally write POST data then execute
     });
   }
 
