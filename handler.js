@@ -1,7 +1,9 @@
 'use strict';
+const https = require('https')
+
 
 module.exports.main = async event => {
-  const BASE_URL = `https://api.${process.env.ENV}.auckland.ac.nz/service`;
+  const BASE_URL = `api.${process.env.ENV}.auckland.ac.nz`;
 
   // POST (Create) a new ServiceNow ticket
   if (event.httpMethod === "POST" && event.body) {
@@ -19,13 +21,13 @@ module.exports.main = async event => {
   if (event.queryStringParameters && event.queryStringParameters.ticketId) {
     try {
       // TODO: Replace hardcoded ticket with ${event.queryStringParameters.ticketId}
-      return await getRes(`/servicenow-readonly/table/u_request?sysparm_query=number=REQ1216647&sysparm_display_value=all`, process.env.SN_API_KEY_R)
+      return await getRes(`/service/servicenow-readonly/table/u_request?sysparm_query=number=REQ1216647&sysparm_display_value=all`, process.env.SN_API_KEY_R)
         .then(res => ([res] = res.result) ? // Destructure to first object in result array (first ticket)
           { statusCode: 200, body: JSON.stringify(res) } :
           { statusCode: 500, body: JSON.stringify('Error retrieving ticket from ServiceNow') })
     } catch (error) {
       console.error(error);
-      return { statusCode: 500, body: JSON.stringify('Task failed successfully.') };
+      return { statusCode: 500, body: JSON.stringify('Task failed successfully: ', error) };
     }
   }
 
@@ -40,14 +42,31 @@ module.exports.main = async event => {
 
   // Function for getting data and returning the JSON result
   // Will make a POST request if the optional data argument is passed
-  function getRes(url, apiKey, data = null) {
-    return fetch(BASE_URL + url, {
+  async function getRes(path, apiKey, data = null) {
+
+    // Request options
+    const options = {
       method: data ? 'POST' : 'GET',
+      hostname: BASE_URL,
+      path: path,
       headers: {
         apiKey: apiKey
-      },
-      body: JSON.stringify(data)
-    }).then(res => res.json())
+      }
+    };
+
+    return new Promise((resolve, reject) => {
+      let request = https.request(options, res => {
+        res.setEncoding('utf8');
+        let body = "";
+        res.on('data', chunk => body += chunk);
+        res.on('end', () => resolve(JSON.parse(body)));
+        res.on('error', e => reject((e)));
+      });
+
+      if (data) // If it is a POST request
+        request.write(JSON.stringify(data));
+      request.end(); // Execute the request
+    });
   }
 
 };
